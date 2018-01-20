@@ -1,0 +1,663 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Capstone Project 2 final report: Data Science Bowl 2017
+\end_layout
+
+\begin_layout Author
+Zexi
+\begin_inset space ~
+\end_inset
+
+Yu
+\end_layout
+
+\begin_layout Abstract
+I will write the abstract when I finish editing this report and have the
+ greenlight for submission from my supervisor.
+ Right now this part serves as a reminder area for myself.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+To be added
+\end_layout
+
+\begin_layout Section
+Problem Description
+\end_layout
+
+\begin_layout Subsection
+Problem Definition
+\end_layout
+
+\begin_layout Standard
+The capstone 2 project comes from the kaggle competition "Data Science Bowl
+ 2017" at the following link: https://www.kaggle.com/c/data-science-bowl-2017.
+ The challenge for this year is detecting lung tumor.
+ More specifically, "Participants will develop algorithms that accurately
+ determine when lesions in the lungs are cancerous, using a data set of
+ thousands of high-resolution lung scans provided by the National Cancer
+ Institute." The scans are provided in the format of CT images.
+ 
+\end_layout
+
+\begin_layout Standard
+Given the above description, it is clear that for this project, the objective
+ is:
+\end_layout
+
+\begin_layout Itemize
+Build a model that will detect whether a lung cancer occured.
+\end_layout
+
+\begin_layout Subsection
+Potential Benefit for Client
+\end_layout
+
+\begin_layout Standard
+According to the project description,
+\end_layout
+
+\begin_layout Standard
+"This will dramatically reduce the false positive rate that plagues the
+ current detection technology, get patients earlier access to life-saving
+ interventions, and give radiologists more time to spend with their patients."
+\end_layout
+
+\begin_layout Standard
+Because of that, potential clients for this project could be hospitals and
+ health/cancer department of the goverments.
+\end_layout
+
+\begin_layout Section
+Dataset Description
+\end_layout
+
+\begin_layout Standard
+The data can be found at the kaggle competition site: https://www.kaggle.com/c/dat
+a-science-bowl-2017/data.
+\end_layout
+
+\begin_layout Standard
+Main files include:
+\end_layout
+
+\begin_layout Itemize
+stage1.7z: This file contains all the CT images for training stage.
+ Total number of patient is close to 1500.
+ Total size for these files is 150 GB.
+\end_layout
+
+\begin_layout Itemize
+stage1_labels.csv: This file contains the cancer label for each patient,
+ two fields here are patient ID and cancer positive/negative
+\end_layout
+
+\begin_layout Itemize
+stage2.7z: This file contains all the CT images for testing stage.
+ Total number of patient is around 500.
+ Total size for these files is 117 GB.
+\end_layout
+
+\begin_layout Standard
+All CT images come in DICOM format.
+ 
+\end_layout
+
+\begin_layout Standard
+For images related to a single patient, it usually comes in a number of
+ slices.
+ Each slice is a vertical view of the 3D image, and in different height.
+ The size for each size is 512 by 512 pixels, and number of slices for a
+ single patient is around 200.
+ The operations we are going to perform in data wrangling are all slice
+ basis, meaning we apply them in one slice, and move on to the next slice.
+\end_layout
+
+\begin_layout Section
+Data Wrangling and Observations
+\end_layout
+
+\begin_layout Standard
+This section describes the data wrangling part.
+ Since medical imaging is unstructured data, and we plan to use convolutional
+ neural network in this project, we cannot really perform inferential statistics
+ in this project.
+ So I plan to visualize this part as clear as possible.
+ Please consider this as my compensation for exploratory data analysis.
+\end_layout
+
+\begin_layout Subsection
+Data preparation
+\end_layout
+
+\begin_layout Standard
+DICOM format does not only save the image.
+ It contains other information supporting medical usage, such as pixel size,
+ patient information, HU scaling.
+\end_layout
+
+\begin_layout Standard
+The images are in different scales.
+ So the first and most important task is transforming all images into standard
+ CT measurement: the Hounsfield Unit (HU).
+ HU measures radiodensity.
+ The steps for the transformation is:
+\end_layout
+
+\begin_layout Itemize
+Fill in the missing data out of CT scanning scope by assuming everything
+ there is air.
+\end_layout
+
+\begin_layout Itemize
+Read scaling slope and intercept, then transform the image into HU measurements
+\end_layout
+
+\begin_layout Subsection
+Morphology Operations
+\end_layout
+
+\begin_layout Standard
+After all images are transformed into HU, it is now time to segment the
+ nodes within the lung.
+ We use morphology operations for this task.
+ It is performed on every slices It involves in six steps.
+ I am also going to take a slice from stage 1 as an example and visualize
+ the whole procedure.
+ 
+\end_layout
+
+\begin_layout Itemize
+Convert the image into a binary image
+\end_layout
+
+\begin_layout Itemize
+Remove the blobs connected to the border of the image.
+\end_layout
+
+\begin_layout Itemize
+Label the image, and keep the labels with 2 largest areas (right lung and
+ left lung)
+\end_layout
+
+\begin_layout Itemize
+Erosion operation with a disk of radius 2 to separate the lung nodules attached
+ to the blood vessels.
+\end_layout
+
+\begin_layout Itemize
+Closure operation with a disk of radius 12 to keep nodules attached to the
+ lung wall.
+\end_layout
+
+\begin_layout Itemize
+Fill in the holes inside the binary mask of lungs
+\end_layout
+
+\begin_layout Standard
+The figure for each step including the original slice and the superimposition
+ by the final mask:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/original.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Original Image
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/1.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/2.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/3.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/4.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/5.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/6.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Step 6
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/final.png
+	width 35col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Superimposition
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The morphology steps
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After all the steps, the overall 3D plot looks like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/final3d.png
+	width 80col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+3D plot for one patient
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It looks like large nodes in the lung is successfully segmented.
+ Looks good!
+\end_layout
+
+\begin_layout Subsection
+Compensations
+\end_layout
+
+\begin_layout Standard
+Before we pass the slices to CNN, there are three major compensations I
+ make given my limitations on this project.
+ I will list them in small subsections and explain them one by one.
+\end_layout
+
+\begin_layout Subsubsection
+Down Sampling
+\end_layout
+
+\begin_layout Standard
+Since the images are so large, it has to be down sampled giving I only have
+ 4GB RAM on my GPU.
+ For each patient, the image is down-sampled into 50 pixels by 50 pixels
+ by 20 slices.
+ The slices is evenly selected.
+\end_layout
+
+\begin_layout Subsubsection
+No Further Node Segment
+\end_layout
+
+\begin_layout Subsubsection
+Not training on full training set
+\end_layout
+
+\begin_layout Section
+Learning Method: Convolutional Neural Network
+\end_layout
+
+\begin_layout Subsection
+Method of choice: CNN
+\end_layout
+
+\begin_layout Subsection
+CNN Structure
+\end_layout
+
+\begin_layout Section
+Results and Performance
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\end_body
+\end_document
