@@ -83,8 +83,8 @@ Yu
 \end_layout
 
 \begin_layout Abstract
-I will write the abstract when I finish editing this report and have the
- greenlight for submission from my supervisor.
+Abstract I will write the abstract when I finish editing this report and
+ have the green light for submission from my supervisor.
  Right now this part serves as a reminder area for myself.
 \end_layout
 
@@ -93,7 +93,68 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-To be added
+This is my final report for my second capstone project of DataScience Career
+ Track.
+ The goal of this project is to challenge me and to learn more advanced
+ methods in machine learning area.
+ With this reason, the problem of this project is selected as the data science
+ bowl 2017 from kaggle website.
+ Here is a link to the competition page: https://www.kaggle.com/c/data-science-bow
+l-2017.
+ During this project, I find it useful to learn from several open notebooks
+ for this competition, you can find them in the discussion panel: https://www.kag
+gle.com/c/data-science-bowl-2017/discussion.
+\end_layout
+
+\begin_layout Standard
+In summary, the goal of the competition is identifying lung cancer given
+ high-resolution CT images.
+ To this end, a convolutional neural network (CNN) is deployed.
+ The code as well as my comments can be found at my milestone report at
+ the following link: https://github.com/ZackCode/Capstone2_Cancer_Detection/tree/
+master/reports.
+\end_layout
+
+\begin_layout Standard
+The rest of this report contains the following sections:
+\end_layout
+
+\begin_layout Itemize
+Problem Description: In this section, I will define the problem, point out
+ the potential client, and describe they can benefit from this project.
+ 
+\end_layout
+
+\begin_layout Itemize
+Dataset Description: In this section, I will give the link to the dataset,
+ and point out some important files within this dataset.
+\end_layout
+
+\begin_layout Itemize
+Data Wrangling and Observations: In this section, I will give details about
+ data wrangling using morphology operations, plot graph for each step, and
+ talk about the sacrifices I made due to the lack of computational power
+ of my computer.
+\end_layout
+
+\begin_layout Itemize
+Learning Method: In this section, I will briefly overview CNN method, and
+ demonstrate the structure I used for this network.
+\end_layout
+
+\begin_layout Itemize
+Result and Performance: In this section, I will describe the performance
+ of the method, as well as what one can infer from the result.
+\end_layout
+
+\begin_layout Itemize
+Future Works: In this section I will talk about the potential ways to improve
+ the performance of this project.
+\end_layout
+
+\begin_layout Itemize
+Conclusion: In this section I will close this report by summarizing the
+ project.
 \end_layout
 
 \begin_layout Section
@@ -121,7 +182,7 @@ Given the above description, it is clear that for this project, the objective
 \end_layout
 
 \begin_layout Itemize
-Build a model that will detect whether a lung cancer occured.
+Build a model that will detect whether a lung cancer occurred.
 \end_layout
 
 \begin_layout Subsection
@@ -140,7 +201,7 @@ According to the project description,
 
 \begin_layout Standard
 Because of that, potential clients for this project could be hospitals and
- health/cancer department of the goverments.
+ governmental health/cancer departments.
 \end_layout
 
 \begin_layout Section
@@ -159,7 +220,7 @@ Main files include:
 \begin_layout Itemize
 stage1.7z: This file contains all the CT images for training stage.
  Total number of patient is close to 1500.
- Total size for these files is 150 GB.
+ Total size of these files is 150 GB.
 \end_layout
 
 \begin_layout Itemize
@@ -182,8 +243,8 @@ All CT images come in DICOM format.
 For images related to a single patient, it usually comes in a number of
  slices.
  Each slice is a vertical view of the 3D image, and in different height.
- The size for each size is 512 by 512 pixels, and number of slices for a
- single patient is around 200.
+ The size of each image is 512 by 512 pixels, and the number of slices for
+ a single patient is around 200.
  The operations we are going to perform in data wrangling are all slice
  basis, meaning we apply them in one slice, and move on to the next slice.
 \end_layout
@@ -198,7 +259,6 @@ This section describes the data wrangling part.
  neural network in this project, we cannot really perform inferential statistics
  in this project.
  So I plan to visualize this part as clear as possible.
- Please consider this as my compensation for exploratory data analysis.
 \end_layout
 
 \begin_layout Subsection
@@ -236,7 +296,8 @@ Morphology Operations
 After all images are transformed into HU, it is now time to segment the
  nodes within the lung.
  We use morphology operations for this task.
- It is performed on every slices It involves in six steps.
+ It is performed on every slice.
+ It involves in six steps.
  I am also going to take a slice from stage 1 as an example and visualize
  the whole procedure.
  
@@ -620,17 +681,18 @@ Before we pass the slices to CNN, there are three major sacrifices I make
 \end_layout
 
 \begin_layout Subsubsection
-Down Sampling
+Downsampling
 \end_layout
 
 \begin_layout Standard
-Since the images are so large, it has to be down sampled giving I only have
+Since the images are so large, it has to be downsampled giving I only have
  4GB RAM on my GPU.
- For each patient, the image is down-sampled into 50 pixels by 50 pixels
+ For each patient, the image is downsampled into 50 pixels by 50 pixels
  by 20 slices.
- The slices are evenly selected for the down sampling.
- This operation can surely cause problem for detecting any tumor with diameter
- less than 6mm, because it may not appear on the down-sampled image at all.
+ The slices are evenly selected for the downsampling.
+ This operation can surely cause problems for detecting any tumor with a
+ diameter less than 6mm, because it may not appear on the downsampled image
+ at all.
 \end_layout
 
 \begin_layout Subsubsection
@@ -638,7 +700,7 @@ No Further Node Segment
 \end_layout
 
 \begin_layout Standard
-Node segmentation is usually an alternative method for the down sampling.
+Node segmentation is usually an alternative method for the downsampling.
  It means further segmenting the nodes from the morphology result, making
  them into small figures, and then pass it alone to neural network.
  In this way, algorithms can still detect small tumors, and do not have
@@ -648,14 +710,13 @@ Node segmentation is usually an alternative method for the down sampling.
 \end_layout
 
 \begin_layout Standard
-The reason for me to skip this procedure and use down sampling is that you
+The reason for me to skip this procedure and use downsampling is that you
  have to know if each segmented node is cancer or not in order to successfully
  train the neural network.
  The top finish for this competition manually labeled every node in the
  training set.
- Due to the time limitation for me (because after all this is a capstone
- project for springboard learning course), I do not perform the manual labeling.
- But this is definitely in the future work, in order to improve the performance.
+ Due to time limitations, I did not perform manual labeling.
+ But this is will be a task for future work, in order to improve performance.
 \end_layout
 
 \begin_layout Subsubsection
@@ -669,8 +730,9 @@ There are 1500 patients in the training set, and I only used around 240
  In my estimation, it takes 5 days to apply the morphology operations on
  full training sets.
  Since I have to perform the operations on each patient on the testing set
- (stage 2), I cut down training set to make my project finish in time.
- In the future after I finish the springboard course, I will run the training
+ (stage 2), I cut down the training set in order to finish the project in
+ time.
+ In the future, after I finish the springboard course, I will run the training
  on all the patients in the training set and update this report.
 \end_layout
 
@@ -679,7 +741,7 @@ Learning Method: Convolutional Neural Network
 \end_layout
 
 \begin_layout Standard
-After morphology operations, the images are down-sampled and send to convolution
+After morphology operations, the images are down-sampled and sent to convolution
 al neural network (CNN).
  CNN is getting more and more attention in deep learning, and is considered
  as the weapon of choice when dealing with recognition/classification task
@@ -689,12 +751,12 @@ al neural network (CNN).
 
 \begin_layout Standard
 When it comes to recognition/classification tasks in image processing, tradition
-ally people looks for features that best describes the characteristic of
- the image, and then the task become a traditional machine learning problem
- that can be solved by SVM or decision trees.
+ally people look for features that best describes the characteristic of
+ the image, and then the task becomes a traditional machine learning problem
+ that can be solved by classic ML methods such as SVM or decision trees.
  For example, given pictures of rocks and eggs, the best way to distinguish
  egg is to find smooth curves for the boundaries.
- Traditionally, people find curves or other kind of shapes by designing
+ Traditionally, people find curves or other kinds of shapes by designing
  a small image chunk (kernel) based on the shape he/she is looking for,
  and perform convolution multiplication using this kernel to find the particular
  shape in the image.
@@ -705,7 +767,7 @@ The idea for convolutional neural network is quite simple: Instead of deciding
  the features ourselves, we let neural network decides the best set of features
  for us.
  From the algorithm point of view, that means instead of designing the kernels
- for particular shape, let the algorithm decide the kernels based on training
+ for particular shapes, let the algorithm decide the kernels based on training
  data.
  
 \end_layout
@@ -715,7 +777,7 @@ A typical CNN usually includes multiple convolution layers (conv layers
  in my figure), each layer contains multiple random initialized kernels
  and the training data is passed multiple times for the network to decide
  the best kernels to characterize the classification target.
- Stacking multiple layers help catching all characteristic from small to
+ Stacking multiple layers help to catch all characteristic from small to
  large scale (meaning it can catch shapes like circle and the curves on
  the circle at the same time).
  
@@ -779,8 +841,8 @@ Results and Performance
 \end_layout
 
 \begin_layout Standard
-The result constantly pass the brenchmark set for the competition, but only
- in 1 of the 4 times it will get close to a bronze medal.
+The result consistently passes the benchmark set for the competition, but
+ only 1 out of 4 times will it get close to a bronze model.
  On average, it ranked around 220 out of 394 teams.
 \end_layout
 
@@ -795,7 +857,7 @@ We do not know true label for the images in stage 2.
  is 30% as well.
  Compared to that, the 10% cancer rate given by our CNN algorithm suggests
  we missed a lot of cancer cases, either because of overfitting, or because
- of the lost of small tumors caused by the downsampling.
+ of the loss of small tumors caused by the downsampling.
 \end_layout
 
 \begin_layout Section
@@ -803,7 +865,7 @@ Future works
 \end_layout
 
 \begin_layout Standard
-The future work definitly contains two points I mentioned in the 
+The future work definitely contains two points I mentioned in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -822,7 +884,7 @@ Train the CNN using all the training set instead of 1/5 of them and see
 
 \begin_layout Itemize
 Manually label the nodes in the training set, perform node segmentation
- and train CNN based on single node images.
+ and train and change CNN structure according to the single node images.
 \end_layout
 
 \begin_layout Section
@@ -830,7 +892,20 @@ Conclusion
 \end_layout
 
 \begin_layout Standard
-To be added
+In this project, A CNN algorithm is deployed in order to address the problem
+ raised by the 
+\begin_inset Quotes eld
+\end_inset
+
+Data Science Bowl 2017
+\begin_inset Quotes erd
+\end_inset
+
+ kaggle competition.
+ The performance reaches the benchmark for the competition, but it does
+ not excel for a variety of reasons.
+ These reasons are listed in the future works and will be addressed when
+ I have spear time.
 \end_layout
 
 \end_body
