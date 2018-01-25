@@ -832,7 +832,7 @@ CNN structure
 It uses four convolutional layers to fully capture the characteristics in
  the image from small to large scale, and then use 3 fully connected normal
  neural network layers to output the result.
- I also put maxpool layers between every convolutional layers.
+ I also put maxpool layers between convolutional layers.
  I also put one dropout layer in the very last to prevent overfitting.
 \end_layout
 
