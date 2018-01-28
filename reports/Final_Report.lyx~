@@ -83,9 +83,14 @@ Yu
 \end_layout
 
 \begin_layout Abstract
-Abstract I will write the abstract when I finish editing this report and
- have the green light for submission from my supervisor.
- Right now this part serves as a reminder area for myself.
+In this report, A convolutional neural network is used to solve the tumor
+ recognition problem in CT images proposed by data science bowl 2017 competition.
+ The given CT image is first transformed into the Hounsfield Unit, and several
+ morphology operations is used to segment nodes structure within the lung
+ area.
+ Finally, a CNN is used to recognize tumor patterns.
+ The result does not excel for a variety of reasons, and further works will
+ be done to improve the performance.
 \end_layout
 
 \begin_layout Section
@@ -111,8 +116,15 @@ In summary, the goal of the competition is identifying lung cancer given
  high-resolution CT images.
  To this end, a convolutional neural network (CNN) is deployed.
  The code as well as my comments can be found at my milestone report at
- the following link: https://github.com/ZackCode/Capstone2_Cancer_Detection/tree/
-master/reports.
+ the following link: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Report_folder"
+target "https://github.com/ZackCode/Capstone2_Cancer_Detection/tree/master/reports"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -168,7 +180,7 @@ Problem Definition
 \begin_layout Standard
 The capstone 2 project comes from the kaggle competition "Data Science Bowl
  2017" at the following link: https://www.kaggle.com/c/data-science-bowl-2017.
- The challenge for this year is detecting lung tumor.
+ The challenge for this year is detecting lung tumors.
  More specifically, "Participants will develop algorithms that accurately
  determine when lesions in the lungs are cancerous, using a data set of
  thousands of high-resolution lung scans provided by the National Cancer
@@ -262,7 +274,7 @@ This section describes the data wrangling part.
 \end_layout
 
 \begin_layout Subsection
-Data preparation
+Data Preparation
 \end_layout
 
 \begin_layout Standard
@@ -332,14 +344,21 @@ Fill in the holes inside the binary mask of lungs
 
 \begin_layout Standard
 The figure for each step including the original slice and the superimposition
- by the final mask:
+ by the final mask is shown here 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:mor"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Float figure
@@ -620,6 +639,13 @@ The morphology steps
 \end_inset
 
 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:mor"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -628,7 +654,14 @@ The morphology steps
 \end_layout
 
 \begin_layout Standard
-After all the steps, the overall 3D plot looks like this:
+After all the steps, the overall 3D plot looks like this figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:3d"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -650,6 +683,13 @@ status collapsed
 \begin_layout Plain Layout
 3D plot for one patient
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:3d"
 
 \end_inset
 
@@ -685,7 +725,7 @@ Downsampling
 \end_layout
 
 \begin_layout Standard
-Since the images are so large, it has to be downsampled giving I only have
+Since the images are so large, it has to be downsampled given I only have
  4GB RAM on my GPU.
  For each patient, the image is downsampled into 50 pixels by 50 pixels
  by 20 slices.
@@ -702,7 +742,7 @@ No Further Node Segment
 \begin_layout Standard
 Node segmentation is usually an alternative method for the downsampling.
  It means further segmenting the nodes from the morphology result, making
- them into small figures, and then pass it alone to neural network.
+ them into small figures, and then pass it along to neural network.
  In this way, algorithms can still detect small tumors, and do not have
  to handle the whole images at once.
  This is usually the standard procedure in medical image processing, but
@@ -902,8 +942,8 @@ Data Science Bowl 2017
 \end_inset
 
  kaggle competition.
- The performance reaches the benchmark for the competition, but it does
- not excel for a variety of reasons.
+ The performance beats the benchmark for the competition, but it does not
+ excel for a variety of reasons.
  These reasons are listed in the future works and will be addressed when
  I have spear time.
 \end_layout
