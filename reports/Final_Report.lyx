@@ -715,7 +715,7 @@ Sacrifices
 \end_layout
 
 \begin_layout Standard
-Before we pass the slices to CNN, there are three major sacrifices I make
+Before we pass the slices to CNN, there are three major sacrifices I made
  given my limitations on this project.
  I will list them in small subsections and explain them one by one.
 \end_layout
